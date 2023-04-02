@@ -1,4 +1,4 @@
-package com.ghelius.yourcounter.ui.theme
+package com.ghelius.yourcounter.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
