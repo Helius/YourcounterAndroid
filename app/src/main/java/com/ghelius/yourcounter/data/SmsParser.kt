@@ -45,14 +45,14 @@ class SmsParser {
             amount = amount,
             total = total,
             dest = destStr.trim(),
-            dateTime = parseTime(timeStr.trim())
+            dateTime = time
         )
     }
 
-    fun parseAmount(text: String) : Int {
-        var res : Int
+    fun parseAmount(text: String) : Long {
+        var res : Long
         val am = text.split(".",",")
-        res = am[0].toInt() * 100
+        res = am[0].toLong() * 100
         if (am.size > 1) {
             res += am[1].toInt()
         }

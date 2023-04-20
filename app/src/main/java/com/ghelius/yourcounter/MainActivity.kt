@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        requestSmsPermission(this)
+        this.requestSmsPermission(this)
     }
     private fun requestSmsPermission(context: Activity) {
         val permission = android.Manifest.permission.RECEIVE_SMS

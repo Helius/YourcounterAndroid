@@ -1,5 +1,6 @@
 package com.ghelius.yourcounter.entity
 
+import java.io.Serializable
 import java.time.LocalDateTime
 
 enum class Actions {
@@ -15,11 +16,11 @@ enum class Actions {
 data class TransactionCandidate(
     val acc: String,
     val action: Actions,
-    val amount: Int,
-    val total: Int,
+    val amount: Long,
+    val total: Long,
     val dest: String,
     val dateTime: LocalDateTime
-)
+) : Serializable
 {
     override fun toString() : String {
         return "From $acc action ${action.toString()} $amount to $dest total $total at $dateTime"
