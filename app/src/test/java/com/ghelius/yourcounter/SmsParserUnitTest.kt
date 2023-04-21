@@ -197,7 +197,7 @@ class SmsParserUnitTest {
             "ECMC8283 07:27 перевод 50р Баланс: 36860.21р",
             "ECMC8283 08:45 Выдача 1400р ATM 60027701 Баланс: 33289.40р",
 
-            //TODO: add income transfer
+            //TODO: not implemented yet
             "Накопительный счет *7674 Капитализация на 27,30р. Баланс: 1011,06р"
         )
     }

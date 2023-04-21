@@ -43,7 +43,7 @@ class NotificationService(private val context: Context) {
     }
 
     fun showNotification(transactionCandidate : TransactionCandidate, transaction: Transaction, categoryName: String) {
-        val title = "${actionToString(transactionCandidate.action)} ${amountToString(transaction.amount)}"
+        val title = "${actionToString(transactionCandidate.action)}: ${amountToString(transaction.amount)} RUB"
         val text = "${transactionCandidate.dest} : $categoryName"
 
         val notification = buildNotification(title, text, transaction, transactionCandidate)
@@ -60,7 +60,6 @@ class NotificationService(private val context: Context) {
             }
             notify(rnd, notification)
         }
-
     }
 
     private fun buildNotification(title: String, text: String, transaction: Transaction, transactionCandidate: TransactionCandidate) : Notification {
@@ -84,8 +83,8 @@ class NotificationService(private val context: Context) {
         val addPendingIntent : PendingIntent =
             PendingIntent.getActivity(context, 0, addIntent, PendingIntent.FLAG_IMMUTABLE)
 
-        var builder = NotificationCompat.Builder(context, CHANNEL_ID)
-//            .setSmallIcon(R.drawable.notification_icon)
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.star_on)
             .setContentTitle(title)
             .setContentText(text)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

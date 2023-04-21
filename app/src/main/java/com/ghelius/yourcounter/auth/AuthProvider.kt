@@ -6,9 +6,8 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
 
 
-class AuthProvider constructor(
-    private val firebaseAuth: FirebaseAuth
-) {
+class AuthProvider() {
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     suspend fun authenticate(
         email: String,
         password: String
