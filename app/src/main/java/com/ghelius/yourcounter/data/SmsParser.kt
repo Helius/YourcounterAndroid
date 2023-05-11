@@ -5,6 +5,8 @@ import com.ghelius.yourcounter.entity.TransactionCandidate
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneOffset
+import java.util.*
 
 class SmsParser {
 
@@ -28,25 +30,33 @@ class SmsParser {
 
     fun parse(text: String): TransactionCandidate {
         val m = regex.find(text)
-        val (accStr, timeStr, actionStr, amountStr, destStr, totalStr) = m!!.destructured
+        if (m != null) {
+            val (accStr, timeStr, actionStr, amountStr, destStr, totalStr) = m.destructured
 
-        var amount = parseAmount(amountStr.trim())
-        val action = actions[actionStr.trim().lowercase()]?: throw Exception("Can't parse action: $actionStr")
-        when(action) {
-            Actions.AdvancePayment, Actions.Salary, Actions.Refund -> Unit
-            else -> amount = -amount
+            var amount = parseAmount(amountStr.trim())
+            val action = actions[actionStr.trim().lowercase()]
+                ?: throw Exception("Can't parse action: $actionStr")
+            when (action) {
+                Actions.AdvancePayment, Actions.Salary, Actions.Refund -> Unit
+                else -> amount = -amount
+            }
+            val total = parseAmount(totalStr.trim())
+            val time = parseTime(timeStr.trim())
+
+            val mCalendar = GregorianCalendar()
+            val mTimeZone = mCalendar.timeZone
+
+            return TransactionCandidate(
+                acc = accStr.trim(),
+                action = action,
+                amount = amount,
+                total = total,
+                dest = destStr.trim(),
+                dateTime = time.toEpochSecond(ZoneOffset.ofHours(mTimeZone.rawOffset/(3600*1000)))
+            )
+        } else {
+            throw (Exception("Cant parse sms $text"))
         }
-        val total = parseAmount(totalStr.trim())
-        val time = parseTime(timeStr.trim())
-
-        return TransactionCandidate(
-            acc = accStr.trim(),
-            action = action,
-            amount = amount,
-            total = total,
-            dest = destStr.trim(),
-            dateTime = time
-        )
     }
 
     fun parseAmount(text: String) : Long {

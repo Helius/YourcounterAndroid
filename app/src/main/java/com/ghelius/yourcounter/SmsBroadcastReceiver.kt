@@ -41,9 +41,13 @@ class SmsBroadcastReceiver : BroadcastReceiver() {
             extractMessages.forEach { smsMessage ->
                 Log.v(TAG, smsMessage.displayMessageBody + " from " + smsMessage.displayOriginatingAddress)
                 if (smsMessage.displayOriginatingAddress.equals(PhoneNumber)) {
-                    val transaction = parser.parse(smsMessage.displayMessageBody)
-                    Log.v(TAG, transaction.toString())
-                    usecase.processTransactionCandidate(transaction)
+                    try {
+                        val transaction = parser.parse(smsMessage.displayMessageBody)
+                        Log.v(TAG, transaction.toString())
+                        usecase.processTransactionCandidate(transaction)
+                    } catch (e : java.lang.Exception) {
+                        Log.e(TAG, "error: ${e.message}")
+                    }
                 }
             }
         } else {

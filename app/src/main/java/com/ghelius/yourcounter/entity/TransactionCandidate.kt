@@ -10,19 +10,28 @@ enum class Actions {
     Refund,
     Transfer,
     Paying,
-    ATM
+    ATM,
+    Unknown
 }
 
 data class TransactionCandidate(
-    val acc: String,
-    val action: Actions,
-    val amount: Long,
-    val total: Long,
-    val dest: String,
-    val dateTime: LocalDateTime
+    val acc: String = "",
+    val action: Actions = Actions.Unknown,
+    val amount: Long = 0L,
+    val total: Long = 0L,
+    val dest: String = "",
+    val dateTime: Long = 0L
 ) : Serializable
 {
     override fun toString() : String {
         return "From $acc action ${action.toString()} $amount to $dest total $total at $dateTime"
+    }
+
+    fun isValid() : Boolean {
+        return acc.isNotEmpty()
+                && action != Actions.Unknown
+                && amount != 0L
+                && total != 0L
+                && dest.isNotEmpty()
     }
 }

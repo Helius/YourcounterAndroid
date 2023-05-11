@@ -18,6 +18,7 @@ import com.ghelius.yourcounter.MainActivity
 import com.ghelius.yourcounter.entity.Actions
 import com.ghelius.yourcounter.entity.Transaction
 import com.ghelius.yourcounter.entity.TransactionCandidate
+import com.ghelius.yourcounter.presentation.vm.NotificationViewModel
 
 class NotificationService(private val context: Context) {
 
@@ -25,28 +26,15 @@ class NotificationService(private val context: Context) {
         createNotificationChannel()
     }
 
-    private fun actionToString(action : Actions) : String {
-        return when (action) {
-            Actions.Buying -> "Покупка"
-            Actions.AdvancePayment -> "Аванс"
-            Actions.Salary -> "Зарплата"
-            Actions.Refund -> "Возврат"
-            Actions.Transfer -> "Перевод"
-            Actions.Paying -> "Списание"
-            Actions.ATM -> "Выдача"
-        }
-    }
+    fun showNotification(
+        transactionCandidate: TransactionCandidate,
+        categoryName: String,
+        readyToAdd: Boolean,
+        candidateId: String
+    ) {
+        val vm = NotificationViewModel(transactionCandidate, categoryName)
 
-    private fun amountToString(amount : Long) : String {
-        val main = amount / 100
-        return "${main}.${amount - main*100}"
-    }
-
-    fun showNotification(transactionCandidate : TransactionCandidate, transaction: Transaction, categoryName: String) {
-        val title = "${actionToString(transactionCandidate.action)}: ${amountToString(transaction.amount)} RUB"
-        val text = "${transactionCandidate.dest} : $categoryName"
-
-        val notification = buildNotification(title, text, transaction, transactionCandidate)
+        val notification = buildNotification(vm.title, vm.text, transactionCandidate, readyToAdd, candidateId)
         val rnd : Int = (0..100).random()
         with(NotificationManagerCompat.from(context)) {
             // notificationId is a unique int for each notification that you must define
@@ -62,14 +50,19 @@ class NotificationService(private val context: Context) {
         }
     }
 
-    private fun buildNotification(title: String, text: String, transaction: Transaction, transactionCandidate: TransactionCandidate) : Notification {
+    private fun buildNotification(
+        title: String,
+        text: String,
+        transactionCandidate: TransactionCandidate,
+        readyToAdd: Boolean,
+        candidateId: String
+    ): Notification {
 
         // Create an explicit intent for an Activity in your app
         val screenIntent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra(EXTRA_NOTIFICATION_ID, 0)
-            putExtra("transaction", transaction)
-            putExtra("transactionCandidate", transactionCandidate)
+            putExtra("candidateId", candidateId)
         }
         val openPendingIntent: PendingIntent =
             PendingIntent.getActivity(context, 0, screenIntent, PendingIntent.FLAG_IMMUTABLE)
@@ -77,21 +70,23 @@ class NotificationService(private val context: Context) {
         val addIntent = Intent(context, AddTransactionActionReceiver::class.java).apply {
 //            action = ACTION_AD
             putExtra(EXTRA_NOTIFICATION_ID, 0)
-            putExtra("transaction", transaction)
-            putExtra("transactionCandidate", transactionCandidate)
+            putExtra("candidateId", candidateId)
         }
         val addPendingIntent : PendingIntent =
             PendingIntent.getActivity(context, 0, addIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.star_on)
             .setContentTitle(title)
             .setContentText(text)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(openPendingIntent)
-            .addAction(android.R.drawable.ic_menu_add, "ADD",
-                addPendingIntent)
             .setAutoCancel(true)
+            .setSmallIcon(android.R.drawable.star_on)
+
+        if (readyToAdd) {
+            builder.addAction(android.R.drawable.ic_menu_add, "ADD TO ${transactionCandidate.acc}",
+                addPendingIntent)
+        }
         return builder.build()
     }
 

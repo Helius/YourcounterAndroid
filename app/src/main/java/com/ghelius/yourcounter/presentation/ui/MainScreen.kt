@@ -6,7 +6,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -22,13 +21,13 @@ fun Navigation(navController: NavHostController) {
             TestScreen(koinViewModel())
         }
         composable(NavigationItem.New.route) {
-            NewScreen()
+            NewScreen(koinViewModel())
         }
         composable(NavigationItem.History.route) {
             HistoryScreen()
         }
-        composable(NavigationItem.Bindings.route) {
-            SettingsScreen()
+        composable(NavigationItem.Settings.route) {
+            SettingsScreen(koinViewModel())
         }
     }
 }
@@ -38,7 +37,6 @@ fun MainScreen() {
     YourcounterTheme() {
         val navController = rememberNavController()
         Scaffold(
-//                topBar = { TopBar() },
             bottomBar = { BottomNavigationBar(navController = navController) },
             content = { padding -> // We have to pass the scaffold inner padding to our content. That's why we use Box.
                 Box(modifier = Modifier.padding(padding)) {
@@ -55,7 +53,7 @@ fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         NavigationItem.New,
         NavigationItem.History,
-        NavigationItem.Bindings,
+        NavigationItem.Settings,
         NavigationItem.Test,
     )
     NavigationBar(
