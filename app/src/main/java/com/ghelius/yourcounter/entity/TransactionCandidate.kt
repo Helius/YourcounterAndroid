@@ -21,7 +21,7 @@ data class TransactionCandidate(
     val total: Long = 0L,
     val dest: String = "",
     val dateTime: Long = 0L
-) : Serializable
+)
 {
     override fun toString() : String {
         return "From $acc action ${action.toString()} $amount to $dest total $total at $dateTime"
@@ -32,6 +32,5 @@ data class TransactionCandidate(
                 && action != Actions.Unknown
                 && amount != 0L
                 && total != 0L
-                && dest.isNotEmpty()
     }
 }

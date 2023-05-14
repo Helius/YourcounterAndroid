@@ -11,7 +11,7 @@ data class Transaction(
     val amount: Long = 0L,
     var categoryId: String = "",
     val walletId: String = "",
-    val dateTime: Long = 0L,
+    val `when`: Long = 0L,
     val comment: String = "",
     val who: String = ""
 ) : Serializable

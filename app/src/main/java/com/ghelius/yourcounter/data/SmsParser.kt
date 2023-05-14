@@ -52,7 +52,7 @@ class SmsParser {
                 amount = amount,
                 total = total,
                 dest = destStr.trim(),
-                dateTime = time.toEpochSecond(ZoneOffset.ofHours(mTimeZone.rawOffset/(3600*1000)))
+                dateTime = time.toEpochSecond(ZoneOffset.ofHours(mTimeZone.rawOffset/(3600*1000)))*1000
             )
         } else {
             throw (Exception("Cant parse sms $text"))

@@ -2,6 +2,7 @@ package com.ghelius.yourcounter.data
 
 import android.util.Log
 import com.ghelius.yourcounter.entity.Transaction
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -36,7 +37,29 @@ class TransactionRepo {
                 Log.e(TAG, "loadPost:onCancelled", databaseError.toException())
             }
         }
+
+//        val childListener = object : ChildEventListener {
+//            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+//                listener.onDataChange(snapshot)
+//            }
+//
+//            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+//            }
+//
+//            override fun onChildRemoved(snapshot: DataSnapshot) {
+//            }
+//
+//            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                Log.e(TAG, "loadPost:onCancelled", error.toException())
+//            }
+//
+//        }
+
         databaseReference.limitToLast(20).addValueEventListener(listener)
+//        databaseReference.limitToLast(20).addChildEventListener(childListener)
     }
 
     suspend fun addTransaction(transaction: Transaction) : String {

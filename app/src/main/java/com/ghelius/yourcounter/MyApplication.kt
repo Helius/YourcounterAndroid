@@ -48,7 +48,7 @@ class MyApplication : Application() {
         }
         viewModel { TestViewModel(get()) }
         viewModel { SettingsViewModel(get(), get()) }
-        viewModel {NewViewModel(get(), get(), get())}
+        viewModel { NewViewModel(get(), get(), get(), get(), get()) }
     }
 
     override fun onCreate() {

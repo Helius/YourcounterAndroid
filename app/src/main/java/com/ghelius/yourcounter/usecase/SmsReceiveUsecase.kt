@@ -1,8 +1,6 @@
 package com.ghelius.yourcounter.usecase
 
 import com.ghelius.yourcounter.data.*
-import com.ghelius.yourcounter.entity.ReceiverCategoryBinding
-import com.ghelius.yourcounter.entity.Transaction
 import com.ghelius.yourcounter.entity.TransactionCandidate
 
 class SmsReceiveUsecase(
@@ -13,14 +11,14 @@ class SmsReceiveUsecase(
 ) {
 
     suspend fun processTransactionCandidate(transactionCandidate: TransactionCandidate) {
-        val categoryIds = categoryBindingRepo.getCategoryIdsFor(transactionCandidate.dest)
+        val categoryIds = categoryBindingRepo.getCategoryIdsForDest(transactionCandidate.dest)
         //TODO: val walletId = ...
         var categoryName = String()
         if (categoryIds.isEmpty()) {
             categoryName = "Can't guess"
         } else {
             for (id in categoryIds) {
-                val name = categoryRepo.categories.value[id]?.name ?: id
+                val name = categoryRepo.categoriesById.value[id]?.name ?: id
                 categoryName += "$name "
             }
         }

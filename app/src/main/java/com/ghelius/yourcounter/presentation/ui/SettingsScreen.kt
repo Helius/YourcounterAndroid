@@ -42,7 +42,7 @@ fun SettingsScreen(settingsViewModel: SettingsViewModel) {
 fun BindingList(settingsViewModel: SettingsViewModel) {
     val bindingListState = settingsViewModel.bindingList.collectAsState()
     val list : List<BindingViewModel> = bindingListState.value
-    Button(onClick = { settingsViewModel.addBinding("BUSTRONOM", "somecatid") }) {
+    Button(onClick = { }) {
         Text(text = "Add")
     }
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
